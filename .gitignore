@@ -1,6 +1,11 @@
 # compiled output
 /dist
 /mongo
+/mongo/
+./mongo
+./mongo/
+mongo/
+/mongo*
 /node_modules
 mongo
 # Logs
@@ -27,6 +32,10 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
+
+# node extra stuff (for someone installing eslint)
+node_modules/
+package-lock.json
 
 # IDE - VSCode
 .vscode/*
