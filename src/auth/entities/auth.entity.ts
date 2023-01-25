@@ -12,7 +12,7 @@ export class Auth extends Document{
     @Prop({
         maxlength:128
     })
-    last_name: string;    
+    lastName: string;    
 
     @Prop({
         maxlength:32
@@ -40,23 +40,23 @@ export class Auth extends Document{
     @Prop({
         type: String
     })
-    identification_file: string
+    identificationFile: string
     // token = models.CharField(max_length=8, null=True, default=None)
     // transaction_token = models.CharField(max_length=8, null=True, default=None)
     // is_active = models.BooleanField(default=True)
     @Prop({
         default: false
     })
-    is_active: boolean
+    isActive: boolean
 
     @Prop({
         default: false
     })
-    is_staff: boolean
+    isStaff: boolean
 
     @Prop({
         default: true
     })
-    is_person: boolean
+    isPerson: boolean
 }
 export const AuthSchema = SchemaFactory.createForClass(Auth)
