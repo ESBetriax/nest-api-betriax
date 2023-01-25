@@ -7,7 +7,7 @@ services:
     ports:
       - 27017:27017
     environment:
-      - MONGO_DATABASE:nest-api-betriax
+      - MONGO_DATABASE=nest-api-betriax
     volumes:
       - ./mongo:/data/db
       
