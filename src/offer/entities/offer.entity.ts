@@ -17,8 +17,8 @@ export class Offer extends Document {
   //                      ('D', 'Deactivated')]
   // amount = models.FloatField()
   @Prop({
-    MAX_VALUE: 9999.99,
-    MIN_VALUE: 400,
+    max: 9999.99,
+    min: 400,
   })
   amount: number;
   // exchange_rate = models.FloatField()
