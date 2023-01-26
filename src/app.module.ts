@@ -7,8 +7,10 @@ import { OfferModule } from './offer/offer.module';
 
 //holaa MEN 2
 @Module({
-  imports: [AuthModule, 
-    MongooseModule.forRoot('mongodb://localhost:27017/nest-api-betriax'), OfferModule
+  imports: [
+    AuthModule,
+    MongooseModule.forRoot('mongodb://localhost:27017/nest-api-betriax'),
+    OfferModule,
   ],
   controllers: [AppController],
   providers: [AppService],

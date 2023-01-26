@@ -1,13 +1,18 @@
-import { IsInt, IsPositive, Min, IsString, MinLength, IsEnum, IsNumber } from 'class-validator';
+import { IsNumber, IsIn, Min } from 'class-validator';
+import { offertType, OfferType } from './../types/offerType.type';
+
 export class CreateOfferDto {
-    @IsString()
-    offerType:string
-    @IsNumber()
-    @MinLength(3)
-    amount:number
-    @IsNumber()
-    @MinLength(1)
-    exchangeRate: number
-    @IsNumber()
-    time:number
+  @IsIn(offertType)
+  offerType: OfferType;
+
+  @IsNumber()
+  @Min(100)
+  amount: number;
+
+  @IsNumber()
+  @Min(1)
+  exchangeRate: number;
+
+  @IsNumber()
+  time: number;
 }

@@ -1,11 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectModel(Auth.name)
+    private readonly authModel: Model<Auth>,
+  ) {}
+
+  async create(createAuthDto: CreateAuthDto) {
+    try {
+      const auth = await this.authModel.create(createAuthDto);
+      return auth;
+    } catch (error) {
+      console.log(error.message);
+      throw new InternalServerErrorException(
+        `Could not authenticate. ${error.message}`,
+      );
+    }
   }
 
   findAll() {
