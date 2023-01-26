@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose/dist';
 import { Document } from 'mongoose';
+import { Location } from '../interfaces/location.interface';
 import { Role, roleList } from './../types/role.type';
 
 @Schema()
@@ -54,6 +55,11 @@ export class Auth extends Document {
     default: roleList[0],
   })
   role: Role;
+  
+  @Prop({
+    required:true
+  })
+  location:[Location]
 }
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);
