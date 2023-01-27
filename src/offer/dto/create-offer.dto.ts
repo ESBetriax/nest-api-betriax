@@ -13,7 +13,4 @@ export class CreateOfferDto {
   @IsNumber()
   @Min(1)
   exchangeRate: number;
-
-  @IsNumber()
-  time: number;
 }

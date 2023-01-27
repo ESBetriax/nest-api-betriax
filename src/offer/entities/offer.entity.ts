@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, now } from 'mongoose';
 import { OfferType } from '../types/offerType.type';
 
 @Schema()
@@ -25,10 +25,20 @@ export class Offer extends Document {
   @Prop()
   exchangeRate: number;
   // type = models.CharField(max_length=4, choices=OFFER_TYPE_CHOICES)
-  @Prop({
-    type: Number,
-  })
-  time: number;
+  // @Prop({
+  //   type: Number,
+  // })
+  // time: number;
+
+  @Prop()
+  date: Date;
+
+  @Prop({ default: now() })
+  createdAt: Date;
+
+  @Prop({ default: now() })
+  updatedAt: Date;
+
   // end_date = models.DateTimeField(null=True)
   // created_date = models.DateTimeField(auto_now_add=True)
   // company = models.ForeignKey(Company, related_name='offers', on_delete=models.CASCADE, null=True)
