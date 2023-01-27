@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, now } from 'mongoose';
 import { OfferType } from '../types/offerType.type';
+import * as moment from 'moment';
 
 @Schema()
 export class Offer extends Document {
@@ -35,6 +36,9 @@ export class Offer extends Document {
 
   @Prop({ default: now() })
   createdAt: Date;
+
+  @Prop()
+  expiresAt: Date;
 
   @Prop({ default: now() })
   updatedAt: Date;

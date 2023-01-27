@@ -32,13 +32,13 @@ export class AuthService {
 
   async findOne(term: string) {
     let user: Auth;
-    let otherUser: Auth[];
+    // let otherUser: Auth[];
 
     if (isValidObjectId(term)) {
       user = await this.authModel.findById(term);
-      otherUser = await this.authModel.find({
-        ordersTaken: '63d1bcb1e478276b057a73d9',
-      });
+      // otherUser = await this.authModel.find({
+      //   ordersTaken: '63d1bcb1e478276b057a73d9',
+      // });
     }
 
     if (!user) {
@@ -65,6 +65,7 @@ export class AuthService {
         });
       }
     } catch (error) {
+      console.error(error.message);
       throw new BadRequestException(error.message);
     }
     return user;
