@@ -32,6 +32,15 @@ export class Offer extends Document {
   // time: number;
 
   @Prop()
+  convertedValue: number;
+
+  @Prop()
+  betriaxValue: number;
+
+  @Prop()
+  depositValue: number;
+
+  @Prop()
   date: Date;
 
   @Prop({ default: now() })

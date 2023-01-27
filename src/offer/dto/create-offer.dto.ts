@@ -14,7 +14,18 @@ export class CreateOfferDto {
   @Min(1)
   exchangeRate: number;
 
+  @IsNumber()
+  convertedValue: number;
+
+  @IsNumber()
+  betriaxValue: number;
+
+  @IsNumber()
+  depositValue: number;
+
   @IsOptional()
   @IsNumber()
+  @Max(4)
+  @Min(1)
   expiresAt: number;
 }
