@@ -1,4 +1,4 @@
-import { IsNumber, IsIn, Min, Max } from 'class-validator';
+import { IsNumber, IsIn, Min, Max, IsOptional } from 'class-validator';
 import { offertType, OfferType } from './../types/offerType.type';
 
 export class CreateOfferDto {
@@ -15,5 +15,17 @@ export class CreateOfferDto {
   exchangeRate: number;
 
   @IsNumber()
-  time: number;
+  convertedValue: number;
+
+  @IsNumber()
+  betriaxValue: number;
+
+  @IsNumber()
+  depositValue: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Max(4)
+  @Min(1)
+  expiresAt: number;
 }

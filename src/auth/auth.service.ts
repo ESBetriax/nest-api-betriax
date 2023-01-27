@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
+import { notWithinArray } from 'src/utils/notWithinArray';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Auth } from './entities/auth.entity';
@@ -31,9 +32,13 @@ export class AuthService {
 
   async findOne(term: string) {
     let user: Auth;
+    // let otherUser: Auth[];
 
     if (isValidObjectId(term)) {
       user = await this.authModel.findById(term);
+      // otherUser = await this.authModel.find({
+      //   ordersTaken: '63d1bcb1e478276b057a73d9',
+      // });
     }
 
     if (!user) {
@@ -42,6 +47,7 @@ export class AuthService {
       );
     }
     return user;
+    // return otherUser;
   }
 
   async update(term: string, updateAuthDto: UpdateAuthDto) {
@@ -49,15 +55,20 @@ export class AuthService {
 
     try {
       if (updateAuthDto.offersTaken) {
+        const offerList = user.ordersTaken;
+        const newOffer = updateAuthDto.offersTaken;
+
+        notWithinArray(offerList, newOffer, 'offersTaken');
+
         await user.updateOne({
-          ordersTaken: [...user.ordersTaken, updateAuthDto.offersTaken],
+          ordersTaken: [...offerList, newOffer],
         });
       }
     } catch (error) {
-      throw new Error('error');
+      console.error(error.message);
+      throw new BadRequestException(error.message);
     }
-
-    return `This action updates a #${term} auth`;
+    return user;
   }
 
   remove(id: number) {
