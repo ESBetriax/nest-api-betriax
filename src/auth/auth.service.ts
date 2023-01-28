@@ -51,18 +51,22 @@ export class AuthService {
   }
 
   async update(term: string, updateAuthDto: UpdateAuthDto) {
-    const user = await this.findOne(term);
+    let user = await this.findOne(term);
 
     try {
       if (updateAuthDto.offersTaken) {
         const offerList = user.ordersTaken;
         const newOffer = updateAuthDto.offersTaken;
 
-        notWithinArray(offerList, newOffer, 'offersTaken');
+        notWithinArray(offerList, newOffer as unknown, 'ordersTaken');
 
-        await user.updateOne({
-          ordersTaken: [...offerList, newOffer],
-        });
+        user = await this.authModel.findByIdAndUpdate(
+          term,
+          {
+            ordersTaken: [...offerList, newOffer],
+          },
+          { new: true },
+        );
       }
     } catch (error) {
       console.error(error.message);
