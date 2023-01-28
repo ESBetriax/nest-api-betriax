@@ -63,7 +63,7 @@ export class AuthService {
         user = await this.authModel.findByIdAndUpdate(
           term,
           {
-            ordersTaken: [...offerList, newOffer],
+            $push: { ordersTaken: newOffer },
           },
           { new: true },
         );
