@@ -29,6 +29,7 @@ export class Offer extends Document {
     type: Number,
   })
   time: number;
+  //PARSE DATE
   // end_date = models.DateTimeField(null=True)
   // created_date = models.DateTimeField(auto_now_add=True)
   // company = models.ForeignKey(Company, related_name='offers', on_delete=models.CASCADE, null=True)
