@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 
-export function notWithinArray(
-  array: any[],
-  value: any,
+export function notWithinArray<T>(
+  array: T[],
+  value: T,
   arrayName: string,
 ): void {
   const foundInArray = array.find((element) => element == value);
