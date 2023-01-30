@@ -10,6 +10,7 @@ import {
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
+import { ParseMongoIdPipe } from './../common/pipes/parse-mongo-id.pipe';
 
 @Controller('offer')
 export class OfferController {
@@ -25,9 +26,9 @@ export class OfferController {
     return this.offerService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.offerService.findOne(+id);
+  @Get(':term')
+  findOne(@Param('term', ParseMongoIdPipe) id: string) {
+    return this.offerService.findOne(id);
   }
 
   @Patch(':id')
