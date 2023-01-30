@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose/dist';
-import { Document } from 'mongoose';
-import { Location } from '../interfaces/location.interface';
+import mongoose, { Document } from 'mongoose';
+import { Offer } from 'src/offer/entities/offer.entity';
+import { LocationDto } from '../dto/location.dto';
 import { Role, roleList } from './../types/role.type';
 
 @Schema()
@@ -49,17 +50,32 @@ export class Auth extends Document {
   @Prop({
     default: false,
   })
-  isActive: boolean;
+  isActive?: boolean;
 
   @Prop({
     default: roleList[0],
   })
   role: Role;
-  
+
   @Prop({
-    required:true
+    required: true,
   })
-  location:[Location]
+  location: LocationDto;
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ordersTaken' }],
+    index: true,
+  })
+  ordersTaken: [Offer];
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ordersCreated' }],
+    index: true,
+  })
+  ordersCreated: [Offer];
+
+  @Prop()
+  timestamps: true;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);
