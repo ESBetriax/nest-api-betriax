@@ -15,5 +15,6 @@ import { Offer, OfferSchema } from './entities/offer.entity';
       },
     ]),
   ],
+  exports: [OfferService],
 })
 export class OfferModule {}

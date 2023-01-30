@@ -63,16 +63,16 @@ export class Auth extends Document {
   location: LocationDto;
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ordersTaken' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'offersTaken' }],
     index: true,
   })
-  ordersTaken: [Offer];
+  offersTaken: [Offer];
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ordersCreated' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'offersCreated' }],
     index: true,
   })
-  ordersCreated: [Offer];
+  offersCreated: [Offer];
 
   @Prop()
   timestamps: true;
