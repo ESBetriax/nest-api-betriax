@@ -3,9 +3,8 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
-import { Inject } from '@nestjs/common/decorators';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { notWithinArray } from 'src/utils/notWithinArray';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
