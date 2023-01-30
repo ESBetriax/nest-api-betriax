@@ -1,4 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import * as moment from 'moment';
 import { Model } from 'mongoose';
@@ -17,13 +21,13 @@ export class OfferService {
     try {
       const expiresAt = moment()
         .add(createOfferDto.expiresAt || 1, 'h')
-        .local()
         .toDate();
 
       const offer = await this.offerModel.create({
         ...createOfferDto,
         expiresAt,
       });
+
       return offer;
     } catch (error) {
       console.error(error.message);
@@ -36,8 +40,15 @@ export class OfferService {
     return offers;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} offer`;
+  async findOne(term: string) {
+    const offer = await this.offerModel.findById(term);
+
+    if (!offer) {
+      throw new NotFoundException(
+        `Could not find the offer "${term}". Check that either the id is correct.`,
+      );
+    }
+    return offer;
   }
 
   update(id: number, updateOfferDto: UpdateOfferDto) {
@@ -46,5 +57,19 @@ export class OfferService {
 
   remove(id: number) {
     return `This action removes a #${id} offer`;
+  }
+
+  handleExceptions(error: any) {
+    console.error(error.message);
+    if (error.code === 11000) {
+      throw new BadRequestException(
+        `A user with that email already exists in the database ${JSON.stringify(
+          error.keyValue,
+        )}`,
+      );
+    }
+    throw new InternalServerErrorException(
+      `Could not authenticate. ${error.message}`,
+    );
   }
 }

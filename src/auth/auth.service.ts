@@ -4,17 +4,19 @@ import {
   NotFoundException,
 } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { notWithinArray } from 'src/utils/notWithinArray';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Auth } from './entities/auth.entity';
+import { OfferService } from './../offer/offer.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Auth.name)
     private readonly authModel: Model<Auth>,
+    private readonly offerService: OfferService,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -31,23 +33,14 @@ export class AuthService {
   }
 
   async findOne(term: string) {
-    let user: Auth;
-    // let otherUser: Auth[];
-
-    if (isValidObjectId(term)) {
-      user = await this.authModel.findById(term);
-      // otherUser = await this.authModel.find({
-      //   ordersTaken: '63d1bcb1e478276b057a73d9',
-      // });
-    }
+    const user = await this.authModel.findById(term);
 
     if (!user) {
       throw new NotFoundException(
-        `Could not find the user "${term}". Check that either the name or id is correct.`,
+        `Could not find the user "${term}". Check that either the id is correct.`,
       );
     }
     return user;
-    // return otherUser;
   }
 
   async update(term: string, updateAuthDto: UpdateAuthDto) {
@@ -55,15 +48,17 @@ export class AuthService {
 
     try {
       if (updateAuthDto.offersTaken) {
-        const offerList = user.ordersTaken;
-        const newOffer = updateAuthDto.offersTaken;
+        const newOffer = await this.offerService.findOne(
+          updateAuthDto.offersTaken,
+        );
 
-        notWithinArray(offerList, newOffer as unknown, 'ordersTaken');
+        const offerList = user.offersTaken;
+        notWithinArray(offerList, newOffer.id, 'offersTaken');
 
         user = await this.authModel.findByIdAndUpdate(
           term,
           {
-            $push: { ordersTaken: newOffer },
+            $push: { offersTaken: newOffer },
           },
           { new: true },
         );
