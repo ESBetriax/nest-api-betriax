@@ -10,6 +10,7 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Auth } from './entities/auth.entity';
 import { OfferService } from './../offer/offer.service';
+import { statusList } from './../offer/types/status.type';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,8 @@ export class AuthService {
 
         const offerList = user.offersTaken;
         notWithinArray(offerList, newOffer.id, 'offersTaken');
+
+        await this.offerService.update(newOffer, { status: statusList[1] });
 
         user = await this.authModel.findByIdAndUpdate(
           term,

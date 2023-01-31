@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import * as moment from 'moment';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
@@ -40,7 +40,7 @@ export class OfferService {
     return offers;
   }
 
-  async findOne(term: string) {
+  async findOne(term: string): Promise<Offer> {
     const offer = await this.offerModel.findById(term);
 
     if (!offer) {
@@ -51,8 +51,19 @@ export class OfferService {
     return offer;
   }
 
-  update(id: number, updateOfferDto: UpdateOfferDto) {
-    return `This action updates a #${id} offer`;
+  async update(term: string | Offer, updateOfferDto: UpdateOfferDto) {
+    let offer: Offer;
+    if (typeof term === 'string') offer = await this.findOne(term);
+    else offer = term;
+
+    try {
+      if (updateOfferDto.status) {
+        await offer.updateOne({ status: updateOfferDto.status });
+      }
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+    return `This action updates a #${term} offer`;
   }
 
   remove(id: number) {
