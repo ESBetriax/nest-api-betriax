@@ -57,6 +57,11 @@ export class AuthService {
         const offerList = user.offersTaken;
         notWithinArray(offerList, newOffer.id, 'offersTaken');
 
+        if (newOffer.status !== 'PENDING')
+          throw new BadRequestException(
+            `The offer ${newOffer._id} has already been taken.`,
+          );
+
         const updateOffer: UpdateOfferDto = {
           status: statusList[1],
           taker: user._id,
