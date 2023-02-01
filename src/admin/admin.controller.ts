@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { UpdateAuthDto } from 'src/auth/dto/update-auth.dto';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -23,8 +24,8 @@ export class AdminController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminService.update(+id, updateAdminDto);
+  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
+    return this.adminService.update(+id, updateAuthDto);
   }
 
   @Delete(':id')
