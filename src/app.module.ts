@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { OfferModule } from './offer/offer.module';
 import { CommonModule } from './common/common.module';
+import { AdminModule } from './admin/admin.module';
 
 //holaa MEN 2
 @Module({
@@ -13,6 +14,7 @@ import { CommonModule } from './common/common.module';
     MongooseModule.forRoot('mongodb://localhost:27017/nest-api-betriax'),
     OfferModule,
     CommonModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
