@@ -68,10 +68,13 @@ export class OfferService {
       if (updateOfferDto.status) {
         await offer.updateOne({ status: updateOfferDto.status });
       }
+      if (updateOfferDto.taker) {
+        await offer.updateOne({ taker: updateOfferDto.taker });
+      }
     } catch (error) {
       this.handleExceptions(error);
     }
-    return `This action updates a #${term} offer`;
+    if (typeof term === 'string') return await this.offerModel.findById(term);
   }
 
   remove(id: number) {
