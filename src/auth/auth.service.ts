@@ -32,9 +32,9 @@ export class AuthService {
 
   async findAll() {
     try {
-      return await this.authModel.find() 
+      return await this.authModel.find();
     } catch (error) {
-      this.handleExceptions(error)
+      this.handleExceptions(error);
     }
   }
 
