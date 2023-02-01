@@ -8,11 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators';
-import { query } from 'express';
 import { UpdateAuthDto } from 'src/auth/dto/update-auth.dto';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
+import { QueryPipe } from './pipes/query.pipe';
 
 @Controller('admin')
 export class AdminController {
@@ -24,9 +23,7 @@ export class AdminController {
   }
 
   @Get()
-  async findAll(@Query() query: string) {
-    console.log(typeof query);
-    const { entity }: any = query;
+  async findAll(@Query('entity', QueryPipe) entity: string) {
     if (entity == 'enzo') {
       return 'quiero un sindicato';
     } else {
