@@ -38,7 +38,7 @@ export class AuthService {
 
     if (!user) {
       throw new NotFoundException(
-        `Could not find the user "${term}". Check that either the id is correct.`,
+        `Could not find user "${term}". Check that either the id is correct.`,
       );
     }
     return user;

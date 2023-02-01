@@ -1,7 +1,17 @@
-import { IsNumber, IsIn, Min, Max, IsOptional } from 'class-validator';
+import {
+  IsNumber,
+  IsIn,
+  Min,
+  Max,
+  IsOptional,
+  IsMongoId,
+} from 'class-validator';
 import { offertType, OfferType } from './../types/offerType.type';
 
 export class CreateOfferDto {
+  @IsMongoId()
+  id: string;
+
   @IsIn(offertType)
   offerType: OfferType;
 
