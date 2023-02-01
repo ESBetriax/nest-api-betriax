@@ -9,15 +9,22 @@ import { Model } from 'mongoose';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
+import { AuthService } from './../auth/auth.service';
+import { Inject } from '@nestjs/common/decorators';
+import { forwardRef } from '@nestjs/common/utils';
 
 @Injectable()
 export class OfferService {
   constructor(
     @InjectModel(Offer.name)
     private readonly offerModel: Model<Offer>,
+    @Inject(forwardRef(() => AuthService))
+    private readonly userService: AuthService,
   ) {}
 
   async create(createOfferDto: CreateOfferDto) {
+    const creator = await this.userService.findOne(createOfferDto.id);
+
     try {
       const expiresAt = moment()
         .add(createOfferDto.expiresAt || 1, 'h')
@@ -26,6 +33,7 @@ export class OfferService {
       const offer = await this.offerModel.create({
         ...createOfferDto,
         expiresAt,
+        creator: creator._id,
       });
 
       return offer;
@@ -40,7 +48,7 @@ export class OfferService {
     return offers;
   }
 
-  async findOne(term: string) {
+  async findOne(term: string): Promise<Offer> {
     const offer = await this.offerModel.findById(term);
 
     if (!offer) {
@@ -51,8 +59,22 @@ export class OfferService {
     return offer;
   }
 
-  update(id: number, updateOfferDto: UpdateOfferDto) {
-    return `This action updates a #${id} offer`;
+  async update(term: string | Offer, updateOfferDto: UpdateOfferDto) {
+    let offer: Offer;
+    if (typeof term === 'string') offer = await this.findOne(term);
+    else offer = term;
+
+    try {
+      if (updateOfferDto.status) {
+        await offer.updateOne({ status: updateOfferDto.status });
+      }
+      if (updateOfferDto.taker) {
+        await offer.updateOne({ taker: updateOfferDto.taker });
+      }
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+    if (typeof term === 'string') return await this.offerModel.findById(term);
   }
 
   remove(id: number) {

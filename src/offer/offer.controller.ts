@@ -31,9 +31,12 @@ export class OfferController {
     return this.offerService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
-    return this.offerService.update(+id, updateOfferDto);
+  @Patch(':term')
+  update(
+    @Param('term', ParseMongoIdPipe) term: string,
+    @Body() updateOfferDto: UpdateOfferDto,
+  ) {
+    return this.offerService.update(term, updateOfferDto);
   }
 
   @Delete(':id')

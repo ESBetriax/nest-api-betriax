@@ -1,8 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, now } from 'mongoose';
+import mongoose, {
+  Document,
+  now,
+  SchemaType,
+  SchemaTypes,
+  Types,
+} from 'mongoose';
 import { OfferType } from '../types/offerType.type';
 import { status } from '../types/status.type';
 import { statusList } from './../types/status.type';
+import { Auth } from './../../auth/entities/auth.entity';
 
 @Schema()
 export class Offer extends Document {
@@ -22,6 +29,14 @@ export class Offer extends Document {
 
   @Prop({ default: statusList[0] })
   status: status;
+
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: Auth.name,
+    index: true,
+    required: true,
+  })
+  creator: Types.ObjectId;
 
   @Prop()
   convertedValue: number;
@@ -44,13 +59,18 @@ export class Offer extends Document {
   @Prop({ default: now() })
   updatedAt: Date;
 
-  // end_date = models.DateTimeField(null=True)
-  // created_date = models.DateTimeField(auto_now_add=True)
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: Auth.name,
+    index: true,
+  })
+  taker: Types.ObjectId;
+
+  @Prop()
+  takenDate: Date;
+
   // company = models.ForeignKey(Company, related_name='offers', on_delete=models.CASCADE, null=True)
-  // person = models.ForeignKey(Person, related_name='offers', on_delete=models.CASCADE, null=True)
-  // taker = models.ForeignKey(Company, related_name='takers', on_delete=models.CASCADE, null=True)
-  // taker_person = models.ForeignKey(Person, related_name='takers', on_delete=models.CASCADE, null=True)
-  // taken_date = models.DateTimeField(null=True)
+  // takerCompany = models.ForeignKey(Company, related_name='takers', on_delete=models.CASCADE, null=True)
   // is_active = models.BooleanField(default=True)
 }
 

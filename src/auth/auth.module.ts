@@ -17,5 +17,6 @@ import { OfferModule } from 'src/offer/offer.module';
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
