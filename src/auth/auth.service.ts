@@ -30,8 +30,12 @@ export class AuthService {
     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async findAll() {
+    try {
+      return await this.authModel.find() 
+    } catch (error) {
+      this.handleExceptions(error)
+    }
   }
 
   async findOne(term: string) {

@@ -1,4 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Query } from '@nestjs/common/decorators';
+import { query } from 'express';
 import { UpdateAuthDto } from 'src/auth/dto/update-auth.dto';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -14,8 +16,15 @@ export class AdminController {
   }
 
   @Get()
-  findAll() {
-    return this.adminService.findAll();
+  async findAll(@Query() query:string) {
+    console.log(typeof query)
+    const {entity}:any = query
+    if(entity=="enzo"){
+      return "quiero un sindicato"
+    }else{
+
+      return await this.adminService.findAll();
+    }    
   }
 
   @Get(':id')
