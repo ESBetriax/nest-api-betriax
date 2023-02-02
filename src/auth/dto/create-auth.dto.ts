@@ -24,9 +24,6 @@ export class CreateAuthDto {
   @IsString()
   phone: string;
 
-  @IsOptional()
-  @IsBoolean()
-  isActive: boolean;
   // @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, {
   //   message:
   //     'Password must be at least 8 characters. It must contain at least a lowercase, an uppercase, a number and a special characer.',
