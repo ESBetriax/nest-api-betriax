@@ -3,6 +3,8 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
+import { Inject } from '@nestjs/common/decorators';
+import { forwardRef } from '@nestjs/common/utils';
 import { InjectModel } from '@nestjs/mongoose';
 import * as moment from 'moment';
 import { Model } from 'mongoose';
@@ -10,8 +12,6 @@ import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
 import { AuthService } from './../auth/auth.service';
-import { Inject } from '@nestjs/common/decorators';
-import { forwardRef } from '@nestjs/common/utils';
 
 @Injectable()
 export class OfferService {
