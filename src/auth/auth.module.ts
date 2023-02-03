@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { Auth, AuthSchema } from './entities/auth.entity';
 import { OfferModule } from 'src/offer/offer.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { OfferModule } from 'src/offer/offer.module';
       },
     ]),
     OfferModule,
+    CommonModule
   ],
   controllers: [AuthController],
   providers: [AuthService],

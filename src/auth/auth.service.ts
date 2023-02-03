@@ -12,6 +12,7 @@ import { Auth } from './entities/auth.entity';
 import { OfferService } from './../offer/offer.service';
 import { statusList } from './../offer/types/status.type';
 import { UpdateOfferDto } from './../offer/dto/update-offer.dto';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
     @InjectModel(Auth.name)
     private readonly authModel: Model<Auth>,
     private readonly offerService: OfferService,
+    private readonly commonService: CommonService
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -26,7 +28,7 @@ export class AuthService {
       const auth = await this.authModel.create(createAuthDto);
       return auth;
     } catch (error) {
-      this.handleExceptions(error);
+      this.commonService.handleExceptions(error);
     }
   }
 
@@ -38,7 +40,7 @@ export class AuthService {
     try {
       return await this.authModel.find();
     } catch (error) {
-      this.handleExceptions(error);
+      this.commonService.handleExceptions(error);
     }
   }
 
@@ -86,8 +88,7 @@ export class AuthService {
         );
       }
     } catch (error) {
-      console.error(error.message);
-      throw new BadRequestException(error.message);
+      this.commonService.handleExceptions(error.message);
     }
     return user;
   }
@@ -96,17 +97,4 @@ export class AuthService {
     return `This action removes a #${id} auth`;
   }
 
-  private handleExceptions(error: any) {
-    console.error(error.message);
-    if (error.code === 11000) {
-      throw new BadRequestException(
-        `A user with that email already exists in the database ${JSON.stringify(
-          error.keyValue,
-        )}`,
-      );
-    }
-    throw new InternalServerErrorException(
-      `Could not authenticate. ${error.message}`,
-    );
-  }
 }
