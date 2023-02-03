@@ -8,8 +8,7 @@ import {
 export class CommonService {
   handleExceptions(error: any, entity?: string) {
     console.error(error.message);
-    console.log(error);
-    console.log(Object.keys(error.keyPattern));
+
     if (error.code === 11000)
       throw new BadRequestException(
         `${entity || 'An entity'} with that ${
