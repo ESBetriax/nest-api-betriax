@@ -21,6 +21,12 @@ export class AuthController {
     return this.authService.create(createAuthDto);
   }
 
+  @Post('/login')
+  login(@Body() createLoginDto: CreateAuthDto) {
+    console.log(createLoginDto);
+    return this.authService.login();
+  }
+
   @Get()
   findAll() {
     return this.authService.findAll();

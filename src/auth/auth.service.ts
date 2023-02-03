@@ -30,6 +30,10 @@ export class AuthService {
     }
   }
 
+  async login() {
+    return 'Logged successfully';
+  }
+
   async findAll() {
     try {
       return await this.authModel.find();
