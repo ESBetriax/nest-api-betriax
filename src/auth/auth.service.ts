@@ -20,7 +20,7 @@ export class AuthService {
     @InjectModel(Auth.name)
     private readonly authModel: Model<Auth>,
     private readonly offerService: OfferService,
-    private readonly commonService: CommonService
+    private readonly commonService: CommonService,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -28,7 +28,7 @@ export class AuthService {
       const auth = await this.authModel.create(createAuthDto);
       return auth;
     } catch (error) {
-      this.commonService.handleExceptions(error);
+      this.commonService.handleExceptions(error, 'A user');
     }
   }
 
@@ -88,7 +88,7 @@ export class AuthService {
         );
       }
     } catch (error) {
-      this.commonService.handleExceptions(error.message);
+      this.commonService.handleExceptions(error);
     }
     return user;
   }
@@ -96,5 +96,4 @@ export class AuthService {
   remove(id: number) {
     return `This action removes a #${id} auth`;
   }
-
 }

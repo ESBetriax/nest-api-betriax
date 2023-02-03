@@ -68,12 +68,6 @@ export class Auth extends Document {
   })
   offersTaken: [Offer];
 
-  @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'offersCreated' }],
-    index: true,
-  })
-  offersCreated: [Offer];
-
   @Prop()
   timestamps: true;
 }

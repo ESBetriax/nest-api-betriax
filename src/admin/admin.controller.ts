@@ -25,7 +25,7 @@ export class AdminController {
 
   @Get()
   async findAll(@Query('entity', QueryPipe) entity: string) {
-      return await this.adminService.findAll(entity);
+    return await this.adminService.findAll(entity);
   }
 
   @Get(':id')
@@ -34,7 +34,10 @@ export class AdminController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateAuthDto: UpdateAuthDto) {
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() updateAuthDto: UpdateAuthDto,
+  ) {
     return this.adminService.update(id, updateAuthDto);
   }
 

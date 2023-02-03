@@ -15,7 +15,7 @@ import { CommonModule } from '../common/common.module';
       },
     ]),
     OfferModule,
-    CommonModule
+    CommonModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

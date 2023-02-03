@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AuthService } from './../auth/auth.service';
@@ -13,15 +17,19 @@ export class AdminService {
     // private readonly authModel: Model<Auth>,
     private readonly authService: AuthService,
     private readonly offerService: OfferService,
-    private readonly commonService: CommonService
+    private readonly commonService: CommonService,
   ) {}
   create(createAdminDto: CreateAdminDto) {
     return 'This action adds a new admin';
   }
 
-  async findAll(entity:string) {
-      if(entity==="user") return await this.authService.findAll();
-      if(entity==="offer") return await this.offerService.findAll();
+  async findAll(entity: string) {
+    switch (entity) {
+      case 'user':
+        return await this.authService.findAll();
+      case 'offer':
+        return await this.authService.findAll();
+    }
   }
 
   findOne(id: number) {
@@ -29,12 +37,12 @@ export class AdminService {
   }
 
   async update(id: string, updateAuthDto: UpdateAuthDto) {
-    let user = await this.authService.findOne(id)
+    const user = await this.authService.findOne(id);
     try {
-      if(updateAuthDto.isActive){
-        await user.updateOne({isActive: updateAuthDto.isActive})
+      if (updateAuthDto.isActive) {
+        await user.updateOne({ isActive: updateAuthDto.isActive });
       }
-      return `${user} update successfully.`
+      return `${user} update successfully.`;
     } catch (error) {
       this.commonService.handleExceptions(error);
     }
