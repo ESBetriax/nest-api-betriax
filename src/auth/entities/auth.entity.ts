@@ -50,7 +50,7 @@ export class Auth extends Document {
   @Prop({
     default: false,
   })
-  isActive?: boolean;
+  isActive: boolean;
 
   @Prop({
     default: roleList[0],
