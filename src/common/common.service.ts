@@ -6,7 +6,7 @@ import {
 
 @Injectable()
 export class CommonService {
-  handleExceptions(error: any, entity?: string) {
+  handleExceptions(error: any, entity?: string): never {
     console.error(error.message);
 
     if (error.code === 11000)
@@ -15,9 +15,9 @@ export class CommonService {
           Object.keys(error.keyPattern)[0]
         } already exists in the database ${JSON.stringify(error.keyValue)}`,
       );
-    if (typeof error !== 'string')
-      throw new InternalServerErrorException(
-        `Could not authenticate. ${error.message}`,
-      );
+
+    throw new InternalServerErrorException(
+      `Something went wrong. ${error.message}`,
+    );
   }
 }

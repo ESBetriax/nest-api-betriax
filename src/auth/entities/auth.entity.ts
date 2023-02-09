@@ -7,6 +7,17 @@ import { Role, roleList } from './../types/role.type';
 @Schema()
 export class Auth extends Document {
   @Prop({
+    unique: true,
+    required: true,
+    index: true,
+    maxlength: 32,
+  })
+  email: string;
+
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({
     maxlength: 128,
   })
   name: string;
@@ -22,14 +33,6 @@ export class Auth extends Document {
   phone: string;
 
   @Prop({
-    unique: true,
-    required: true,
-    index: true,
-    maxlength: 32,
-  })
-  email: string;
-
-  @Prop({
     maxlength: 32,
   })
   identification: string;
@@ -43,6 +46,9 @@ export class Auth extends Document {
     type: String,
   })
   identificationFile: string;
+
+  @Prop({ unique: true })
+  token: string;
 
   // token = models.CharField(max_length=8, null=True, default=None)
   // transaction_token = models.CharField(max_length=8, null=True, default=None)
