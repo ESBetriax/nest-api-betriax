@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose/dist';
 import mongoose, { Document } from 'mongoose';
 import { Offer } from 'src/offer/entities/offer.entity';
-import { LocationDto } from '../dto/location.dto';
+import { LocationDto } from '../dto';
 import { Role, roleList } from './../types/role.type';
 
 @Schema()
@@ -47,8 +47,8 @@ export class Auth extends Document {
   })
   identificationFile: string;
 
-  @Prop({ unique: true })
-  token: string;
+  // @Prop({ unique: false })
+  // token: string;
 
   // token = models.CharField(max_length=8, null=True, default=None)
   // transaction_token = models.CharField(max_length=8, null=True, default=None)

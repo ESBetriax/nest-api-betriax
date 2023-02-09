@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   BadRequestException,
   NotFoundException,
@@ -6,13 +6,13 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { notWithinArray } from 'src/utils/notWithinArray';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Auth } from './entities/auth.entity';
+import { CreateAuthDto, UpdateAuthDto } from './dto';
+import { CommonService } from '../common/common.service';
 import { OfferService } from './../offer/offer.service';
 import { statusList } from './../offer/types/status.type';
 import { UpdateOfferDto } from './../offer/dto/update-offer.dto';
-import { CommonService } from '../common/common.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -23,10 +23,19 @@ export class AuthService {
     private readonly commonService: CommonService,
   ) {}
 
-  async create(createAuthDto: CreateAuthDto) {
+  async create(createAuthDto: CreateAuthDto): Promise<Auth> {
     try {
-      const auth = await this.authModel.create(createAuthDto);
-      return auth;
+      const { password, ...userData } = createAuthDto;
+
+      let user: Auth = await this.authModel.create({
+        ...userData,
+        password: bcrypt.hashSync(password, 12),
+      });
+
+      user = user.toObject();
+      delete user.password;
+
+      return user;
     } catch (error) {
       this.commonService.handleExceptions(error, 'A user');
     }
@@ -55,7 +64,7 @@ export class AuthService {
     return user;
   }
 
-  async update(term: string, updateAuthDto: UpdateAuthDto) {
+  async update(term: string, updateAuthDto: UpdateAuthDto): Promise<Auth> {
     let user = await this.findOne(term);
 
     try {
@@ -87,10 +96,10 @@ export class AuthService {
           { new: true },
         );
       }
+      return user;
     } catch (error) {
       this.commonService.handleExceptions(error);
     }
-    return user;
   }
 
   remove(id: number) {

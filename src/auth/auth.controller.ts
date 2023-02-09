@@ -9,8 +9,7 @@ import {
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateAuthDto, LoginAuthDto, UpdateAuthDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -21,8 +20,8 @@ export class AuthController {
     return this.authService.create(createAuthDto);
   }
 
-  @Post('/login')
-  login(@Body() createLoginDto: CreateAuthDto) {
+  @Post('login')
+  login(@Body() createLoginDto: LoginAuthDto) {
     console.log(createLoginDto);
     return this.authService.login();
   }

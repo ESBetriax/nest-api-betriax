@@ -1,17 +1,25 @@
 import { Type } from 'class-transformer';
-import { IsEmail, IsObject, IsString, ValidateNested } from 'class-validator';
-import { Role, roleList } from './../types/role.type';
-import { LocationDto } from './location.dto';
+import {
+  IsEmail,
+  IsObject,
+  IsString,
+  IsStrongPassword,
+  ValidateNested,
+} from 'class-validator';
+import { LocationDto } from './';
 
 export class CreateAuthDto {
+  @IsEmail()
+  email: string;
+
+  @IsStrongPassword()
+  password: string;
+
   @IsString()
   name: string;
 
   @IsString()
   lastName: string;
-
-  @IsEmail()
-  email: string;
 
   @IsString()
   phone: string;
