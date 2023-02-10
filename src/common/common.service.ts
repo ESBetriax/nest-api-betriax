@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 
@@ -32,5 +33,7 @@ export class CommonService {
       throw new InternalServerErrorException(error.message);
     if (error.name === 'NotFoundException')
       throw new NotFoundException(error.message);
+    if (error.name === 'UnauthorizedException')
+      throw new UnauthorizedException(error.message);
   }
 }

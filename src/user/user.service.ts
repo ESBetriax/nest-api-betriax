@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   BadRequestException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common/exceptions';
 
 import { Model } from 'mongoose';
@@ -65,6 +66,11 @@ export class UserService {
 
     try {
       if (updateUserDto.offersTaken) {
+        if (!user.isActive)
+          throw new UnauthorizedException(
+            'You are not currently allowed to take offers.',
+          );
+
         const newOffer = await this.offerService.findOne(
           updateUserDto.offersTaken,
         );

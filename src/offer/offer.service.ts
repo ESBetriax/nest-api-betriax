@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
   BadRequestException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { Inject } from '@nestjs/common/decorators';
 import { forwardRef } from '@nestjs/common/utils';
@@ -24,6 +25,10 @@ export class OfferService {
 
   async create(createOfferDto: CreateOfferDto) {
     const creator = await this.userService.findOne(createOfferDto.id);
+    if (!creator.isActive)
+      throw new UnauthorizedException(
+        'You are not currently allowed to create offers.',
+      );
 
     try {
       const expiresAt = moment()
