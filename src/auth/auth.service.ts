@@ -7,7 +7,7 @@ import { CommonService } from '../common/common.service';
 import { UserService } from 'src/user/user.service';
 import { compareSync, hashSync } from 'bcrypt';
 import { User } from './../user/entities/user.entity';
-import { UserInterface } from './../user/interfaces/user.interface';
+import { UserPayload } from '../user/interfaces/user-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +16,11 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async create(createAuthDto: CreateAuthDto): Promise<UserInterface> {
+  async create(createAuthDto: CreateAuthDto): Promise<UserPayload> {
     try {
       const { password, ...userData } = createAuthDto;
 
-      const user: UserInterface = await this.userService.create({
+      const user: UserPayload = await this.userService.create({
         ...userData,
         password: hashSync(password, 12),
       });

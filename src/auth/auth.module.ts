@@ -10,6 +10,7 @@ import { UserModule } from './../user/user.module';
 @Module({
   imports: [
     CommonModule,
+    ConfigModule,
     UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
