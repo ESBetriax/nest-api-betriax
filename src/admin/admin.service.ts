@@ -10,8 +10,6 @@ import { UpdateUserDto } from './../user/dto/update-user.dto';
 @Injectable()
 export class AdminService {
   constructor(
-    // @InjectModel(Auth.name)
-    // private readonly authModel: Model<Auth>,
     private readonly userService: UserService,
     private readonly offerService: OfferService,
     private readonly commonService: CommonService,
@@ -25,7 +23,7 @@ export class AdminService {
       case 'user':
         return await this.userService.findAll();
       case 'offer':
-        return await this.userService.findAll();
+        return await this.offerService.findAll();
     }
   }
 
