@@ -75,6 +75,11 @@ export class UserService {
           updateUserDto.offersTaken,
         );
 
+        if (newOffer.creator.toString() === term)
+          throw new BadRequestException(
+            'You are trying to take your own offer.',
+          );
+
         const offerList = user.offersTaken;
         notWithinArray(offerList, newOffer.id, 'offersTaken');
 
