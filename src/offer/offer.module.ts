@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { OfferService } from './offer.service';
 import { OfferController } from './offer.controller';
 import { Offer, OfferSchema } from './entities/offer.entity';
-import { AuthModule } from './../auth/auth.module';
+import { UserModule } from './../user/user.module';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { AuthModule } from './../auth/auth.module';
         schema: OfferSchema,
       },
     ]),
-    forwardRef(() => AuthModule),
+    forwardRef(() => UserModule),
   ],
   controllers: [OfferController],
   providers: [OfferService],

@@ -1,40 +1,54 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
-import { AuthService } from './../auth/auth.service';
-import { OfferService } from './../offer/offer.service';
-import { UpdateAuthDto } from '../auth/dto/update-auth.dto';
+
+import { UserService } from 'src/user/user.service';
+
 import { CommonService } from '../common/common.service';
+import { OfferService } from './../offer/offer.service';
+import { UpdateUserDto } from './../user/dto/update-user.dto';
 
 @Injectable()
 export class AdminService {
   constructor(
-    // @InjectModel(Auth.name)
-    // private readonly authModel: Model<Auth>,
-    private readonly authService: AuthService,
+    private readonly userService: UserService,
     private readonly offerService: OfferService,
-    private readonly commonService: CommonService
+    private readonly commonService: CommonService,
   ) {}
   create(createAdminDto: CreateAdminDto) {
     return 'This action adds a new admin';
   }
 
-  async findAll(entity:string) {
-      if(entity==="user") return await this.authService.findAll();
-      if(entity==="offer") return await this.offerService.findAll();
+  async findAll(entity: string) {
+    switch (entity) {
+      case 'user':
+        return await this.userService.findAll();
+      case 'offer':
+        return await this.offerService.findAll();
+    }
   }
 
   findOne(id: number) {
     return `This action returns a #${id} admin`;
   }
 
-  async update(id: string, updateAuthDto: UpdateAuthDto) {
-    let user = await this.authService.findOne(id)
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<string> {
+    if (!Object.keys(updateUserDto).length)
+      throw new BadRequestException(
+        'Please send at least one property to modify.',
+      );
+
+    const user = await this.userService.findOne(id);
     try {
-      if(updateAuthDto.isActive){
-        await user.updateOne({isActive: updateAuthDto.isActive})
+      if (updateUserDto.isActive) {
+        if (user.isActive === updateUserDto.isActive)
+          throw new BadRequestException(
+            `The property isActive is already ${user.isActive}.`,
+          );
+
+        await user.updateOne({ isActive: updateUserDto.isActive });
       }
-      return `${user} update successfully.`
+
+      return `User ${user.name} ${user.lastName} updated successfully.`;
     } catch (error) {
       this.commonService.handleExceptions(error);
     }

@@ -1,15 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, {
-  Document,
-  now,
-  SchemaType,
-  SchemaTypes,
-  Types,
-} from 'mongoose';
+import { Document, now, SchemaTypes, Types } from 'mongoose';
+import { User } from 'src/user/entities/user.entity';
 import { OfferType } from '../types/offerType.type';
 import { status } from '../types/status.type';
 import { statusList } from './../types/status.type';
-import { Auth } from './../../auth/entities/auth.entity';
 
 @Schema()
 export class Offer extends Document {
@@ -32,7 +26,7 @@ export class Offer extends Document {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Auth.name,
+    ref: User.name,
     index: true,
     required: true,
   })
@@ -61,7 +55,7 @@ export class Offer extends Document {
 
   @Prop({
     type: SchemaTypes.ObjectId,
-    ref: Auth.name,
+    ref: User.name,
     index: true,
   })
   taker: Types.ObjectId;

@@ -8,11 +8,14 @@ import {
   Delete,
 } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators';
-import { UpdateAuthDto } from 'src/auth/dto/update-auth.dto';
+
+import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
+import { QueryPipe } from './pipes/query.pipe';
+
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { QueryPipe } from './pipes/query.pipe';
-import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
+
+import { UpdateUserDto } from './../user/dto/update-user.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -25,7 +28,7 @@ export class AdminController {
 
   @Get()
   async findAll(@Query('entity', QueryPipe) entity: string) {
-      return await this.adminService.findAll(entity);
+    return await this.adminService.findAll(entity);
   }
 
   @Get(':id')
@@ -33,9 +36,12 @@ export class AdminController {
     return this.adminService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.adminService.update(id, updateAuthDto);
+  @Patch(':term')
+  update(
+    @Param('term', ParseMongoIdPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.adminService.update(id, updateUserDto);
   }
 
   @Delete(':id')

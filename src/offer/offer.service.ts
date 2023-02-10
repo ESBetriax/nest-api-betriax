@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
   BadRequestException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { Inject } from '@nestjs/common/decorators';
 import { forwardRef } from '@nestjs/common/utils';
@@ -11,19 +12,23 @@ import { Model } from 'mongoose';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
-import { AuthService } from './../auth/auth.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class OfferService {
   constructor(
     @InjectModel(Offer.name)
     private readonly offerModel: Model<Offer>,
-    @Inject(forwardRef(() => AuthService))
-    private readonly userService: AuthService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
 
   async create(createOfferDto: CreateOfferDto) {
     const creator = await this.userService.findOne(createOfferDto.id);
+    if (!creator.isActive)
+      throw new UnauthorizedException(
+        'You are not currently allowed to create offers.',
+      );
 
     try {
       const expiresAt = moment()
