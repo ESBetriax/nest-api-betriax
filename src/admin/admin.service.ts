@@ -1,21 +1,18 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
-import { AuthService } from './../auth/auth.service';
-import { OfferService } from './../offer/offer.service';
-import { UpdateAuthDto } from '../auth/dto/update-auth.dto';
+
+import { UserService } from 'src/user/user.service';
+
 import { CommonService } from '../common/common.service';
+import { OfferService } from './../offer/offer.service';
+import { UpdateUserDto } from './../user/dto/update-user.dto';
 
 @Injectable()
 export class AdminService {
   constructor(
     // @InjectModel(Auth.name)
     // private readonly authModel: Model<Auth>,
-    private readonly authService: AuthService,
+    private readonly userService: UserService,
     private readonly offerService: OfferService,
     private readonly commonService: CommonService,
   ) {}
@@ -26,9 +23,9 @@ export class AdminService {
   async findAll(entity: string) {
     switch (entity) {
       case 'user':
-        return await this.authService.findAll();
+        return await this.userService.findAll();
       case 'offer':
-        return await this.authService.findAll();
+        return await this.userService.findAll();
     }
   }
 
@@ -36,11 +33,11 @@ export class AdminService {
     return `This action returns a #${id} admin`;
   }
 
-  async update(id: string, updateAuthDto: UpdateAuthDto) {
-    const user = await this.authService.findOne(id);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userService.findOne(id);
     try {
-      if (updateAuthDto.isActive) {
-        await user.updateOne({ isActive: updateAuthDto.isActive });
+      if (updateUserDto.isActive) {
+        await user.updateOne({ isActive: updateUserDto.isActive });
       }
       return `${user} update successfully.`;
     } catch (error) {

@@ -1,9 +1,9 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsBoolean, IsIn, IsMongoId, IsOptional } from 'class-validator';
-import { Role, roleList } from '../types/role.type';
-import { CreateAuthDto } from './create-auth.dto';
+import { Role, roleList } from '../../user/types/role.type';
+import { CreateUserDto } from './create-user.dto';
 
-export class UpdateAuthDto extends PartialType(CreateAuthDto) {
+export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsMongoId()
   offersTaken: string;

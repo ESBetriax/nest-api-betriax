@@ -11,15 +11,15 @@ import { Model } from 'mongoose';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
-import { AuthService } from './../auth/auth.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class OfferService {
   constructor(
     @InjectModel(Offer.name)
     private readonly offerModel: Model<Offer>,
-    @Inject(forwardRef(() => AuthService))
-    private readonly userService: AuthService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
 
   async create(createOfferDto: CreateOfferDto) {

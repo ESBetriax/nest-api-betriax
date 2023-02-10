@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { Controller, Post, Body, Param, Delete } from '@nestjs/common';
+
 import { AuthService } from './auth.service';
-import { CreateAuthDto, LoginAuthDto, UpdateAuthDto } from './dto';
+import { CreateAuthDto, LoginAuthDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,26 +14,7 @@ export class AuthController {
 
   @Post('login')
   login(@Body() createLoginDto: LoginAuthDto) {
-    console.log(createLoginDto);
-    return this.authService.login();
-  }
-
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':term')
-  findOne(@Param('term', ParseMongoIdPipe) id: string) {
-    return this.authService.findOne(id);
-  }
-
-  @Patch(':term')
-  update(
-    @Param('term', ParseMongoIdPipe) id: string,
-    @Body() updateAuthDto: UpdateAuthDto,
-  ) {
-    return this.authService.update(id, updateAuthDto);
+    return this.authService.login(createLoginDto);
   }
 
   @Delete(':id')

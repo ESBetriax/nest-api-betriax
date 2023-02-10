@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose/dist';
 import mongoose, { Document } from 'mongoose';
 import { Offer } from 'src/offer/entities/offer.entity';
 import { LocationDto } from '../dto';
-import { Role, roleList } from './../types/role.type';
+import { Role, roleList } from '../types/role.type';
 
 @Schema()
-export class Auth extends Document {
+export class User extends Document {
   @Prop({
     unique: true,
     required: true,
@@ -78,4 +78,4 @@ export class Auth extends Document {
   timestamps: true;
 }
 
-export const AuthSchema = SchemaFactory.createForClass(Auth);
+export const UserSchema = SchemaFactory.createForClass(User);

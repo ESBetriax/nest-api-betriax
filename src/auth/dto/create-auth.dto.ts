@@ -1,37 +1,7 @@
-import { Type } from 'class-transformer';
-import {
-  IsEmail,
-  IsObject,
-  IsString,
-  IsStrongPassword,
-  ValidateNested,
-} from 'class-validator';
-import { LocationDto } from './';
+import { IsStrongPassword } from 'class-validator';
+import { CreateUserDto } from './../../user/dto/create-user.dto';
 
-export class CreateAuthDto {
-  @IsEmail()
-  email: string;
-
+export class CreateAuthDto extends CreateUserDto {
   @IsStrongPassword()
   password: string;
-
-  @IsString()
-  name: string;
-
-  @IsString()
-  lastName: string;
-
-  @IsString()
-  phone: string;
-
-  // @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, {
-  //   message:
-  //     'Password must be at least 8 characters. It must contain at least a lowercase, an uppercase, a number and a special characer.',
-  // })
-  // password: string;
-
-  @IsObject()
-  @ValidateNested({ each: true })
-  @Type(() => LocationDto)
-  location: LocationDto;
 }
