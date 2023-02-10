@@ -18,6 +18,7 @@ import { UpdateOfferDto } from 'src/offer/dto/update-offer.dto';
 import { statusList } from './../offer/types/status.type';
 import { forwardRef } from '@nestjs/common/utils';
 import { Inject } from '@nestjs/common/decorators';
+import { UserInterface } from './interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -29,14 +30,12 @@ export class UserService {
     private readonly commonService: CommonService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserInterface> {
     try {
-      let user: User = await this.userModel.create(createUserDto);
+      const { email, isActive } = await this.userModel.create(createUserDto);
 
-      user = user.toObject();
-      delete user.password;
-
-      return user;
+      const userData: UserInterface = { email, isActive };
+      return userData;
     } catch (error) {
       this.commonService.handleExceptions(error, 'A user');
     }

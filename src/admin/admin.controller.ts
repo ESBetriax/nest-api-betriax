@@ -36,9 +36,9 @@ export class AdminController {
     return this.adminService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch(':term')
   update(
-    @Param('id', ParseMongoIdPipe) id: string,
+    @Param('term', ParseMongoIdPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.adminService.update(id, updateUserDto);

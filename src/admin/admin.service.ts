@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 
 import { UserService } from 'src/user/user.service';
@@ -31,13 +31,24 @@ export class AdminService {
     return `This action returns a #${id} admin`;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<string> {
+    if (!Object.keys(updateUserDto).length)
+      throw new BadRequestException(
+        'Please send at least one property to modify.',
+      );
+
     const user = await this.userService.findOne(id);
     try {
       if (updateUserDto.isActive) {
+        if (user.isActive === updateUserDto.isActive)
+          throw new BadRequestException(
+            `The property isActive is already ${user.isActive}.`,
+          );
+
         await user.updateOne({ isActive: updateUserDto.isActive });
       }
-      return `${user} update successfully.`;
+
+      return `User ${user.name} ${user.lastName} updated successfully.`;
     } catch (error) {
       this.commonService.handleExceptions(error);
     }

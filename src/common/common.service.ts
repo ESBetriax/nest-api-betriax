@@ -3,14 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class CommonService {
   handleExceptions(error: any, entity?: string): never {
-    if (error.name === 'BadRequestException')
-      throw new BadRequestException(error.message);
-    if (error.name === 'InternalServerErrorException')
-      throw new InternalServerErrorException(error.message);
+    this.lowerlevelExceptionHandler(error);
 
     console.error(error.message);
 
@@ -25,5 +23,14 @@ export class CommonService {
     throw new InternalServerErrorException(
       `Something went wrong. ${error.message}`,
     );
+  }
+
+  private lowerlevelExceptionHandler(error: any): void {
+    if (error.name === 'BadRequestException')
+      throw new BadRequestException(error.message);
+    if (error.name === 'InternalServerErrorException')
+      throw new InternalServerErrorException(error.message);
+    if (error.name === 'NotFoundException')
+      throw new NotFoundException(error.message);
   }
 }
