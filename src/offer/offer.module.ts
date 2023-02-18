@@ -5,6 +5,7 @@ import { OfferService } from './offer.service';
 import { OfferController } from './offer.controller';
 import { Offer, OfferSchema } from './entities/offer.entity';
 import { UserModule } from './../user/user.module';
+import { CommonModule } from 'src/common/common.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from './../user/user.module';
       },
     ]),
     forwardRef(() => UserModule),
+    CommonModule
   ],
   controllers: [OfferController],
   providers: [OfferService],

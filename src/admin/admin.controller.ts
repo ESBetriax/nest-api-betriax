@@ -16,6 +16,7 @@ import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 
 import { UpdateUserDto } from './../user/dto/update-user.dto';
+import { EntityDto } from './../offer/dto/entity.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -26,9 +27,14 @@ export class AdminController {
     return this.adminService.create(createAdminDto);
   }
 
+  // @Get()
+  // async findAll(@Query('entity', QueryPipe) entity: string) {
+  //   return await this.adminService.findAll(entity);
+  // }
+
   @Get()
-  async findAll(@Query('entity', QueryPipe) entity: string) {
-    return await this.adminService.findAll(entity);
+  async findAll(@Query() paginationDto: EntityDto) {
+    return await this.adminService.findAll(paginationDto);
   }
 
   @Get(':id')

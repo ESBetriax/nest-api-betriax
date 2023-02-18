@@ -6,15 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { ParseMongoIdPipe } from './../common/pipes/parse-mongo-id.pipe';
+import { PaginationDto } from './../common/dto/pagination.dto';
 
 @Controller('offer')
 export class OfferController {
-  constructor(private readonly offerService: OfferService) {}
+  constructor(
+    private readonly offerService: OfferService
+  ) {}
 
   @Post()
   create(@Body() createOfferDto: CreateOfferDto) {
@@ -22,8 +26,8 @@ export class OfferController {
   }
 
   @Get()
-  findAll() {
-    return this.offerService.findAll();
+  findAll(@Query() paginationDto:PaginationDto) {
+    return this.offerService.findAll(paginationDto);
   }
 
   @Get(':term')

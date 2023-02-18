@@ -20,6 +20,7 @@ import { statusList } from './../offer/types/status.type';
 import { forwardRef } from '@nestjs/common/utils';
 import { Inject } from '@nestjs/common/decorators';
 import { UserInterface } from './interfaces/user.interface';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class UserService {
@@ -42,9 +43,13 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(paginationDto:PaginationDto): Promise<User[]> {
     try {
-      return await this.userModel.find();
+      const { limit=10, offset=0 } = paginationDto;
+      if(offset>0){
+        return await this.userModel.find().limit(limit).skip((offset-1)*10).sort({no:1});
+      }
+      return await this.userModel.find().limit(limit).skip(offset).sort({no:1});
     } catch (error) {
       this.commonService.handleExceptions(error);
     }
