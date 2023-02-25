@@ -19,7 +19,7 @@ import { UpdateOfferDto } from 'src/offer/dto/update-offer.dto';
 import { statusList } from './../offer/types/status.type';
 import { forwardRef } from '@nestjs/common/utils';
 import { Inject } from '@nestjs/common/decorators';
-import { UserInterface } from './interfaces/user.interface';
+import { UserPayload } from './interfaces/user-payload.interface';
 
 @Injectable()
 export class UserService {
@@ -31,11 +31,11 @@ export class UserService {
     private readonly commonService: CommonService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserInterface> {
+  async create(createUserDto: CreateUserDto): Promise<UserPayload> {
     try {
       const { email, isActive } = await this.userModel.create(createUserDto);
 
-      const userData: UserInterface = { email, isActive };
+      const userData: UserPayload = { email, isActive };
       return userData;
     } catch (error) {
       this.commonService.handleExceptions(error, 'A user');
@@ -51,17 +51,27 @@ export class UserService {
   }
 
   async findOne(term: string) {
-    const user = await this.userModel.findById(term);
+    try {
+      const user = await this.userModel.findById(term);
 
-    if (!user) {
-      throw new NotFoundException(
-        `Could not find user "${term}". Check that either the id is correct.`,
-      );
+      if (!user) {
+        throw new NotFoundException(
+          `Could not find user "${term}". Check that either the id is correct.`,
+        );
+      }
+      return user;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
     }
-    return user;
   }
 
   async update(term: string, updateUserDto: UpdateUserDto) {
+    if (!Object.keys(updateUserDto).length) {
+      throw new BadRequestException(
+        'Please send at least one property to modify.',
+      );
+    }
+
     let user = await this.findOne(term);
 
     try {

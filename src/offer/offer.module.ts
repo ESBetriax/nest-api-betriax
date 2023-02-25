@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { OfferService } from './offer.service';
 import { OfferController } from './offer.controller';
 import { Offer, OfferSchema } from './entities/offer.entity';
+import { CommonModule } from './../common/common.module';
 import { UserModule } from './../user/user.module';
 
 @Module({
@@ -14,6 +15,7 @@ import { UserModule } from './../user/user.module';
         schema: OfferSchema,
       },
     ]),
+    CommonModule,
     forwardRef(() => UserModule),
   ],
   controllers: [OfferController],

@@ -12,6 +12,7 @@ import { Model } from 'mongoose';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
+import { CommonService } from 'src/common/common.service';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class OfferService {
   constructor(
     @InjectModel(Offer.name)
     private readonly offerModel: Model<Offer>,
+    private readonly commonService: CommonService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
@@ -43,29 +45,43 @@ export class OfferService {
 
       return offer;
     } catch (error) {
-      console.error(error.message);
-      throw new InternalServerErrorException(`Could not create offer.`);
+      this.commonService.handleExceptions(error);
     }
   }
 
   async findAll() {
-    const offers = await this.offerModel.find();
-    return offers;
+    try {
+      const offers = await this.offerModel.find();
+      return offers;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
+    }
   }
 
   async findOne(term: string): Promise<Offer> {
-    const offer = await this.offerModel.findById(term);
+    try {
+      const offer = await this.offerModel.findById(term);
 
-    if (!offer) {
-      throw new NotFoundException(
-        `Could not find the offer "${term}". Check that either the id is correct.`,
-      );
+      if (!offer) {
+        throw new NotFoundException(
+          `Could not find the offer "${term}". Check that the id is correct.`,
+        );
+      }
+      return offer;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
     }
-    return offer;
   }
 
   async update(term: string | Offer, updateOfferDto: UpdateOfferDto) {
+    if (!Object.keys(updateOfferDto).length) {
+      throw new BadRequestException(
+        'Please send at least one property to modify.',
+      );
+    }
+
     let offer: Offer;
+
     if (typeof term === 'string') offer = await this.findOne(term);
     else offer = term;
 
@@ -76,27 +92,13 @@ export class OfferService {
       if (updateOfferDto.taker) {
         await offer.updateOne({ taker: updateOfferDto.taker });
       }
+      if (typeof term === 'string') return await this.offerModel.findById(term);
     } catch (error) {
-      this.handleExceptions(error);
+      this.commonService.handleExceptions(error);
     }
-    if (typeof term === 'string') return await this.offerModel.findById(term);
   }
 
   remove(id: number) {
     return `This action removes a #${id} offer`;
-  }
-
-  handleExceptions(error: any) {
-    console.error(error.message);
-    if (error.code === 11000) {
-      throw new BadRequestException(
-        `A user with that email already exists in the database ${JSON.stringify(
-          error.keyValue,
-        )}`,
-      );
-    }
-    throw new InternalServerErrorException(
-      `Could not authenticate. ${error.message}`,
-    );
   }
 }
