@@ -22,8 +22,8 @@ export class AdminService {
   }
 
   async findAll(paginationDto: EntityDto) {
-    const{entity, offset=0, limit=10} = paginationDto;
-
+    const{entity} = paginationDto;
+    //poner swith para que emi duerma traquilo.
     if(entity=='user') {
         return await this.userService.findAll(paginationDto)
     } else{
