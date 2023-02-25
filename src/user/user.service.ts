@@ -51,14 +51,18 @@ export class UserService {
   }
 
   async findOne(term: string) {
-    const user = await this.userModel.findById(term);
+    try {
+      const user = await this.userModel.findById(term);
 
-    if (!user) {
-      throw new NotFoundException(
-        `Could not find user "${term}". Check that either the id is correct.`,
-      );
+      if (!user) {
+        throw new NotFoundException(
+          `Could not find user "${term}". Check that either the id is correct.`,
+        );
+      }
+      return user;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
     }
-    return user;
   }
 
   async update(term: string, updateUserDto: UpdateUserDto) {

@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
@@ -8,6 +9,7 @@ import { User } from 'src/user/entities/user.entity';
 import { JwtPayload } from './../interfaces/jwt-payload.interface';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectModel(User.name)
@@ -23,12 +25,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload): Promise<User> {
     const { email } = payload;
 
-    const user = await this.userModel.findOne({ email });
+    const user: User = await this.userModel.findOne({ email });
 
     if (!user) throw new UnauthorizedException('Invalid token.');
-
-    if (!user.isActive)
-      throw new UnauthorizedException('Your account is not currently active.');
 
     return user;
   }

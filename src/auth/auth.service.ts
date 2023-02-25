@@ -1,22 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { compareSync, hashSync } from 'bcrypt';
 
 import { CreateAuthDto, LoginAuthDto } from './dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 import { CommonService } from '../common/common.service';
 import { UserService } from 'src/user/user.service';
-import { compareSync, hashSync } from 'bcrypt';
 import { User } from './../user/entities/user.entity';
 import { UserPayload } from '../user/interfaces/user-payload.interface';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly commonService: CommonService,
+    private readonly jwtService: JwtService,
     private readonly userService: UserService,
   ) {}
 
-  async create(createAuthDto: CreateAuthDto): Promise<UserPayload> {
+  async create(createAuthDto: CreateAuthDto) {
     try {
       const { password, ...userData } = createAuthDto;
 
@@ -25,7 +28,7 @@ export class AuthService {
         password: hashSync(password, 12),
       });
 
-      return user;
+      return { ...user, token: this.setJwtToken({ email: user.email }) };
     } catch (error) {
       this.commonService.handleExceptions(error, 'A user');
     }
@@ -45,5 +48,9 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  private setJwtToken(payload: JwtPayload) {
+    return this.jwtService.sign(payload);
   }
 }

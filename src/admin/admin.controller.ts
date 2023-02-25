@@ -6,8 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators';
+import { AuthGuard } from '@nestjs/passport';
 
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { QueryPipe } from './pipes/query.pipe';
@@ -37,6 +39,7 @@ export class AdminController {
   }
 
   @Patch(':term')
+  // @UseGuards(AuthGuard())
   update(
     @Param('term', ParseMongoIdPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,

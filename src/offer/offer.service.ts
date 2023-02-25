@@ -45,25 +45,32 @@ export class OfferService {
 
       return offer;
     } catch (error) {
-      console.error(error.message);
-      throw new InternalServerErrorException(`Could not create offer.`);
+      this.commonService.handleExceptions(error);
     }
   }
 
   async findAll() {
-    const offers = await this.offerModel.find();
-    return offers;
+    try {
+      const offers = await this.offerModel.find();
+      return offers;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
+    }
   }
 
   async findOne(term: string): Promise<Offer> {
-    const offer = await this.offerModel.findById(term);
+    try {
+      const offer = await this.offerModel.findById(term);
 
-    if (!offer) {
-      throw new NotFoundException(
-        `Could not find the offer "${term}". Check that either the id is correct.`,
-      );
+      if (!offer) {
+        throw new NotFoundException(
+          `Could not find the offer "${term}". Check that the id is correct.`,
+        );
+      }
+      return offer;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
     }
-    return offer;
   }
 
   async update(term: string | Offer, updateOfferDto: UpdateOfferDto) {
