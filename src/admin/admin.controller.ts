@@ -6,8 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators';
+import { AuthGuard } from '@nestjs/passport';
 
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { QueryPipe } from './pipes/query.pipe';
@@ -17,6 +19,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 
 import { UpdateUserDto } from './../user/dto/update-user.dto';
 import { EntityDto } from './../offer/dto/entity.dto';
+import { Auth } from 'src/auth/decorators/role-protected/auth.decorator';
 
 @Controller('admin')
 export class AdminController {
@@ -43,6 +46,7 @@ export class AdminController {
   }
 
   @Patch(':term')
+  @Auth("ADMIN")
   update(
     @Param('term', ParseMongoIdPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -51,6 +55,7 @@ export class AdminController {
   }
 
   @Delete(':id')
+  @Auth("ADMIN")
   remove(@Param('id') id: string) {
     return this.adminService.remove(+id);
   }

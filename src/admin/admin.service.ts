@@ -13,9 +13,9 @@ import { EntityDto } from './../offer/dto/entity.dto';
 @Injectable()
 export class AdminService {
   constructor(
-    private readonly userService: UserService,
-    private readonly offerService: OfferService,
     private readonly commonService: CommonService,
+    private readonly offerService: OfferService,
+    private readonly userService: UserService,
   ) {}
   create(createAdminDto: CreateAdminDto) {
     return 'This action adds a new admin';
@@ -36,18 +36,20 @@ export class AdminService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<string> {
-    if (!Object.keys(updateUserDto).length)
+    if (!Object.keys(updateUserDto).length) {
       throw new BadRequestException(
         'Please send at least one property to modify.',
       );
+    }
 
     const user = await this.userService.findOne(id);
     try {
       if (updateUserDto.isActive) {
-        if (user.isActive === updateUserDto.isActive)
+        if (user.isActive === updateUserDto.isActive) {
           throw new BadRequestException(
             `The property isActive is already ${user.isActive}.`,
           );
+        }
 
         await user.updateOne({ isActive: updateUserDto.isActive });
       }

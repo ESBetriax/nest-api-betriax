@@ -15,4 +15,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsIn(roleList)
   @IsOptional()
   role: Role;
+
+  @IsOptional()
+  @IsMongoId()
+  offersRemove: string;
 }

@@ -20,6 +20,11 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Get('/myoffers/:term')
+  findOffers(@Param('term', ParseMongoIdPipe) id: string) {
+    return this.userService.findOffers(id);
+  }
+
   @Patch(':term')
   update(
     @Param('term', ParseMongoIdPipe) id: string,

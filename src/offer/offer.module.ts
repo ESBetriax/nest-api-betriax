@@ -4,19 +4,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { OfferService } from './offer.service';
 import { OfferController } from './offer.controller';
 import { Offer, OfferSchema } from './entities/offer.entity';
+import { CommonModule } from './../common/common.module';
 import { UserModule } from './../user/user.module';
-import { CommonModule } from 'src/common/common.module';
+import { AuthModule } from './../auth/auth.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
+  MongooseModule.forFeature([
       {
         name: Offer.name,
         schema: OfferSchema,
       },
     ]),
-    forwardRef(() => UserModule),
-    CommonModule
+    CommonModule,
+    forwardRef(() =>AuthModule),
+    forwardRef(() => UserModule)
   ],
   controllers: [OfferController],
   providers: [OfferService],
