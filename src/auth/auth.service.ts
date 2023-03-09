@@ -13,7 +13,8 @@ import { JwtService } from '@nestjs/jwt';
 import { forwardRef } from '@nestjs/common/utils';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
+import { TokenData, DataStoredInToken } from './interfaces/auth.interface';
+import { config } from 'process';
 
 @Injectable()
 export class AuthService {
@@ -41,19 +42,37 @@ export class AuthService {
     }
   }
 
-  async login({ email, password }: LoginAuthDto) {
-    const user: User = await this.userModel.findOne({email});
-    console.log("user Login",user)
+  async login({ email, password }: LoginAuthDto): Promise<any> {
+    const user: User = await this.userModel.findOne({ email });
+
     if (!user)
       throw new BadRequestException('The email introduced is incorrect.');
-    if (!compareSync(password,user.password))
+    if (!compareSync(password, user.password))
       throw new BadRequestException('The password introduced is incorrect.');
 
-    return { user, token: this.setJwtToken({ email: user.email }), message:'Logged successfully' };
+    // const tokenData = this.createToken(user);
+    // const cookie = this.createCookie(tokenData);
+    const cookie = this.setJwtToken({ email: user.email });
+    return { user, cookie };
   }
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  public createToken(user: User): TokenData {
+    const dataStoredInToken: DataStoredInToken = { _id: user._id };
+    const secretKey = 'secretoDePrueba';
+    const expiresIn: number = 60 * 60;
+
+    return {
+      expiresIn,
+      token: this.jwtService.sign(dataStoredInToken, { secret: secretKey }),
+    };
+  }
+
+  public createCookie(tokenData: TokenData): string {
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
   }
 
   private setJwtToken(payload: JwtPayload) {

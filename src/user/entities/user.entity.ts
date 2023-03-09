@@ -11,7 +11,8 @@ export class User extends Document {
     required: true,
     index: true,
     maxlength: 32,
-    set: (val: string) => val.toLowerCase().trim(), get: (val: string) => val
+    set: (val: string) => val.toLowerCase().trim(),
+    get: (val: string) => val,
   })
   email: string;
 
@@ -78,7 +79,6 @@ export class User extends Document {
   @Prop()
   timestamps: true;
 
-   
   // checkFieldsBeforeInserts(){
   //   this.email=this.email.toLocaleLowerCase().trim
   // }

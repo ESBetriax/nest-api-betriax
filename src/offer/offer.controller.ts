@@ -19,9 +19,7 @@ import { Auth } from './../auth/decorators/role-protected/auth.decorator';
 
 @Controller('offer')
 export class OfferController {
-  constructor(
-    private readonly offerService: OfferService
-  ) {}
+  constructor(private readonly offerService: OfferService) {}
 
   @Post()
   @Auth()
@@ -30,7 +28,7 @@ export class OfferController {
   }
   @Get()
   @Auth('PERSON')
-  findAll(@Query() paginationDto:PaginationDto) {
+  findAll(@Query() paginationDto: PaginationDto) {
     return this.offerService.findAll(paginationDto);
   }
 

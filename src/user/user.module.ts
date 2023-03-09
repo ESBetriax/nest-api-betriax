@@ -10,7 +10,7 @@ import { Offer, OfferSchema } from './../offer/entities/offer.entity';
 
 @Module({
   imports: [
-  MongooseModule.forFeature([
+    MongooseModule.forFeature([
       {
         name: User.name,
         schema: UserSchema,

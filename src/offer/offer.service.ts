@@ -50,13 +50,21 @@ export class OfferService {
     }
   }
 
-  async findAll(paginationDto:PaginationDto) {
+  async findAll(paginationDto: PaginationDto) {
     try {
-      const { limit=10, offset=0 } = paginationDto;
-      if(offset>0){
-        return await this.offerModel.find().limit(limit).skip((offset-1)*10).sort({no:1});
+      const { limit = 10, offset = 0 } = paginationDto;
+      if (offset > 0) {
+        return await this.offerModel
+          .find()
+          .limit(limit)
+          .skip((offset - 1) * 10)
+          .sort({ no: 1 });
       }
-      return await this.offerModel.find().limit(limit).skip(offset).sort({no:1});
+      return await this.offerModel
+        .find()
+        .limit(limit)
+        .skip(offset)
+        .sort({ no: 1 });
     } catch (error) {
       this.commonService.handleExceptions(error);
     }

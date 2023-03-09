@@ -46,13 +46,21 @@ export class UserService {
     }
   }
 
-  async findAll(paginationDto:PaginationDto): Promise<User[]> {
+  async findAll(paginationDto: PaginationDto): Promise<User[]> {
     try {
-      const { limit=10, offset=0 } = paginationDto;
-      if(offset>0){
-        return await this.userModel.find().limit(limit).skip((offset-1)*10).sort({no:1});
+      const { limit = 10, offset = 0 } = paginationDto;
+      if (offset > 0) {
+        return await this.userModel
+          .find()
+          .limit(limit)
+          .skip((offset - 1) * 10)
+          .sort({ no: 1 });
       }
-      return await this.userModel.find().limit(limit).skip(offset).sort({no:1});
+      return await this.userModel
+        .find()
+        .limit(limit)
+        .skip(offset)
+        .sort({ no: 1 });
     } catch (error) {
       this.commonService.handleExceptions(error);
     }
@@ -75,7 +83,7 @@ export class UserService {
 
   async findOffers(term: string) {
     try {
-      const offers = await this.offerModel.find({creator:term});
+      const offers = await this.offerModel.find({ creator: term });
 
       if (!offers) {
         throw new NotFoundException(
@@ -145,7 +153,10 @@ export class UserService {
           status: statusList[6],
         };
 
-        if(user._id.valueOf()==offer.creator.valueOf() && offer.status!=='TAKEN') {
+        if (
+          user._id.valueOf() == offer.creator.valueOf() &&
+          offer.status !== 'TAKEN'
+        ) {
           await this.offerService.update(offer, updateOffer);
         }
       }
