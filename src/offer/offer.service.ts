@@ -14,15 +14,16 @@ import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
 import { CommonService } from 'src/common/common.service';
 import { UserService } from 'src/user/user.service';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class OfferService {
   constructor(
     @InjectModel(Offer.name)
     private readonly offerModel: Model<Offer>,
-    private readonly commonService: CommonService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    private readonly commonService: CommonService,
   ) {}
 
   async create(createOfferDto: CreateOfferDto) {
@@ -49,10 +50,13 @@ export class OfferService {
     }
   }
 
-  async findAll() {
+  async findAll(paginationDto:PaginationDto) {
     try {
-      const offers = await this.offerModel.find();
-      return offers;
+      const { limit=10, offset=0 } = paginationDto;
+      if(offset>0){
+        return await this.offerModel.find().limit(limit).skip((offset-1)*10).sort({no:1});
+      }
+      return await this.offerModel.find().limit(limit).skip(offset).sort({no:1});
     } catch (error) {
       this.commonService.handleExceptions(error);
     }

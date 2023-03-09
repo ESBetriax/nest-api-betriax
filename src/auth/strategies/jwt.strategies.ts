@@ -14,17 +14,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
-    private readonly configeService: ConfigService,
+    private readonly configService: ConfigService,
   ) {
     super({
-      secretOrKey: configeService.get('JWT_SECRET'),
+      secretOrKey: configService.get('JWT_SECRET'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
 
   async validate(payload: JwtPayload): Promise<User> {
     const { email } = payload;
-
+    console.log('emailValidate',email)
     const user: User = await this.userModel.findOne({ email });
 
     if (!user) throw new UnauthorizedException('Invalid token.');

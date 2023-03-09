@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { compareSync, hashSync } from 'bcrypt';
 
@@ -10,12 +10,19 @@ import { UserService } from 'src/user/user.service';
 import { User } from './../user/entities/user.entity';
 import { UserPayload } from '../user/interfaces/user-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { forwardRef } from '@nestjs/common/utils';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly commonService: CommonService,
     private readonly jwtService: JwtService,
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
@@ -35,15 +42,14 @@ export class AuthService {
   }
 
   async login({ email, password }: LoginAuthDto) {
-    const user: User = await this.userService.findOne(email);
-
+    const user: User = await this.userModel.findOne({email});
+    console.log("user Login",user)
     if (!user)
       throw new BadRequestException('The email introduced is incorrect.');
-
-    if (!compareSync(user.password, password))
+    if (!compareSync(password,user.password))
       throw new BadRequestException('The password introduced is incorrect.');
 
-    return 'Logged successfully';
+    return { user, token: this.setJwtToken({ email: user.email }), message:'Logged successfully' };
   }
 
   remove(id: number) {

@@ -6,17 +6,19 @@ import { OfferController } from './offer.controller';
 import { Offer, OfferSchema } from './entities/offer.entity';
 import { CommonModule } from './../common/common.module';
 import { UserModule } from './../user/user.module';
+import { AuthModule } from './../auth/auth.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
+  MongooseModule.forFeature([
       {
         name: Offer.name,
         schema: OfferSchema,
       },
     ]),
     CommonModule,
-    forwardRef(() => UserModule),
+    forwardRef(() =>AuthModule),
+    forwardRef(() => UserModule)
   ],
   controllers: [OfferController],
   providers: [OfferService],

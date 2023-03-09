@@ -6,6 +6,9 @@ import { UserService } from 'src/user/user.service';
 import { CommonService } from '../common/common.service';
 import { OfferService } from './../offer/offer.service';
 import { UpdateUserDto } from './../user/dto/update-user.dto';
+import { PaginationDto } from './../common/dto/pagination.dto';
+import { EntityDto } from './../offer/dto/entity.dto';
+
 
 @Injectable()
 export class AdminService {
@@ -18,12 +21,13 @@ export class AdminService {
     return 'This action adds a new admin';
   }
 
-  async findAll(entity: string) {
-    switch (entity) {
-      case 'user':
-        return await this.userService.findAll();
-      case 'offer':
-        return await this.offerService.findAll();
+  async findAll(paginationDto: EntityDto) {
+    const{entity} = paginationDto;
+    //poner swith para que emi duerma traquilo.
+    if(entity=='user') {
+        return await this.userService.findAll(paginationDto)
+    } else{
+        return await this.offerService.findAll(paginationDto);
     }
   }
 

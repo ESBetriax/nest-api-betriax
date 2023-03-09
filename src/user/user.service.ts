@@ -19,16 +19,20 @@ import { UpdateOfferDto } from 'src/offer/dto/update-offer.dto';
 import { statusList } from './../offer/types/status.type';
 import { forwardRef } from '@nestjs/common/utils';
 import { Inject } from '@nestjs/common/decorators';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { UserPayload } from './interfaces/user-payload.interface';
+import { Offer } from './../offer/entities/offer.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
+    private readonly commonService: CommonService,
+    @InjectModel(Offer.name)
+    private readonly offerModel: Model<Offer>,
     @Inject(forwardRef(() => OfferService))
     private readonly offerService: OfferService,
-    private readonly commonService: CommonService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserPayload> {
@@ -42,9 +46,13 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(paginationDto:PaginationDto): Promise<User[]> {
     try {
-      return await this.userModel.find();
+      const { limit=10, offset=0 } = paginationDto;
+      if(offset>0){
+        return await this.userModel.find().limit(limit).skip((offset-1)*10).sort({no:1});
+      }
+      return await this.userModel.find().limit(limit).skip(offset).sort({no:1});
     } catch (error) {
       this.commonService.handleExceptions(error);
     }
@@ -60,6 +68,21 @@ export class UserService {
         );
       }
       return user;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
+    }
+  }
+
+  async findOffers(term: string) {
+    try {
+      const offers = await this.offerModel.find({creator:term});
+
+      if (!offers) {
+        throw new NotFoundException(
+          `Could not find user "${term}". Check that either the id is correct.`,
+        );
+      }
+      return offers;
     } catch (error) {
       this.commonService.handleExceptions(error);
     }
@@ -112,6 +135,19 @@ export class UserService {
           },
           { new: true },
         );
+      }
+      if (updateUserDto.offersRemove) {
+        const offer = await this.offerService.findOne(
+          updateUserDto.offersRemove,
+        );
+
+        const updateOffer: UpdateOfferDto = {
+          status: statusList[6],
+        };
+
+        if(user._id.valueOf()==offer.creator.valueOf() && offer.status!=='TAKEN') {
+          await this.offerService.update(offer, updateOffer);
+        }
       }
       return user;
     } catch (error) {

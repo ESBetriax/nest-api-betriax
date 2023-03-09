@@ -4,9 +4,10 @@ import { AdminController } from './admin.controller';
 import { UserModule } from './../user/user.module';
 import { OfferModule } from '../offer/offer.module';
 import { CommonModule } from '../common/common.module';
+import { AuthModule } from './../auth/auth.module';
 
 @Module({
-  imports: [UserModule, OfferModule, CommonModule],
+  imports: [UserModule, OfferModule, CommonModule, AuthModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

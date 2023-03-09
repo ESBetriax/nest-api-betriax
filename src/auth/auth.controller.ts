@@ -10,6 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
 import { CreateAuthDto, LoginAuthDto } from './dto';
+import { Get } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
@@ -29,5 +30,14 @@ export class AuthController {
   @UseGuards(AuthGuard())
   remove(@Param('id') id: string) {
     return this.authService.remove(+id);
+  }
+
+  @Get('prueba')
+  @UseGuards(AuthGuard())
+  testunPrivateRoutes(){
+    return {
+      ok:true,
+      message: 'Hi there'
+    }
   }
 }
